@@ -89,7 +89,8 @@ final class AppleMusicProvider: MusicProviding {
         }
         let detailed = try await playlist.with([.tracks])
         var result: [PacerTrack] = []
-        for track in detailed.tracks ?? [] {
+        guard let playlistTracks = detailed.tracks else { return result }
+        for track in playlistTracks {
             let tid = "apple:\(track.id.rawValue)"
             libraryTracks[tid] = track
             result.append(
