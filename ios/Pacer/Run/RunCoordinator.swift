@@ -111,7 +111,10 @@ final class RunCoordinator {
     let simulatorProvider = SimulatedCadenceProvider()
 
     var activeMusicProvider: any MusicProviding {
-        musicSource == .demo ? demoProvider : appleProvider
+        if musicSource == .demo {
+            return demoProvider
+        }
+        return appleProvider
     }
 
     init() {
@@ -477,9 +480,9 @@ final class RunCoordinator {
 
     private func makeProvider() -> any CadenceProviding {
         switch providerKind {
-        case .coreMotion: CoreMotionCadenceProvider()
-        case .simulator: simulatorProvider
-        case .tap: tapProvider
+        case .coreMotion: return CoreMotionCadenceProvider()
+        case .simulator: return simulatorProvider
+        case .tap: return tapProvider
         }
     }
 

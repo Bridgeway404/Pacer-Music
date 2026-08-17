@@ -29,14 +29,21 @@ jobs:
         run: xcodegen generate --spec ios/project.yml --project ios
       - name: Build for iOS Simulator
         run: |
-          set -o pipefail
+          set +e
           xcodebuild build \
             -project ios/Pacer.xcodeproj \
             -scheme Pacer \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY="" \
-            | tail -n 60
+            > build.log 2>&1
+          status=$?
+          if [ $status -ne 0 ]; then
+            echo "---- errors ----"
+            grep -E "error:|error genera|BUILD FAILED" build.log | head -80
+          fi
+          tail -n 15 build.log
+          exit $status
       - name: Run PacerKit tests (macOS)
         run: swift test --package-path ios/PacerKit
 
