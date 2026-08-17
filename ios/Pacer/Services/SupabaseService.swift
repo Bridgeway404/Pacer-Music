@@ -34,10 +34,10 @@ final class SupabaseService {
     private func observeAuth() async {
         for await (event, session) in client.auth.authStateChanges {
             switch event {
-            case .initialSession, .signedIn, .tokenRefreshed:
+            case .initialSession, .signedIn, .tokenRefreshed, .userUpdated:
                 userID = session?.user.id
                 userEmail = session?.user.email
-            case .signedOut, .userDeleted:
+            case .signedOut:
                 userID = nil
                 userEmail = nil
             default:
@@ -193,7 +193,6 @@ final class SupabaseService {
         let inserted: InsertedID = try await client
             .from("run_sessions")
             .insert(row, returning: .representation)
-            .select("id")
             .single()
             .execute()
             .value

@@ -16,14 +16,14 @@ struct CadenceEngineTests {
     }
 
     @Test("holds a steady target on noisy 160 SPM (±3 SPM jitter)")
-    func noisyStable() {
+    func noisyStable() throws {
         let engine = CadenceEngine()
         let result = feed(engine, noisySeries(160, 60, noise: 3))
 
         // Only the initial lock — noise must not cause retargets.
         #expect(result.decisions.count == 1)
         #expect(result.decisions.first?.decision?.kind == .initialLock)
-        let target = try! #require(engine.currentTarget)
+        let target = try #require(engine.currentTarget)
         #expect(target >= 158 && target <= 162)
     }
 
@@ -60,7 +60,8 @@ struct CadenceEngineTests {
         let spike = constantSeries(185, 5) + constantSeries(160, 30)
         let result = feed(engine, spike, startAt: t0)
 
-        #expect(result.decisions.filter { $0.decision?.kind == .retarget }.isEmpty)
+        let retargets = result.decisions.filter { $0.decision?.kind == .retarget }
+        #expect(retargets.isEmpty)
         #expect(engine.currentTarget == 160)
     }
 
@@ -137,7 +138,8 @@ struct CadenceEngineTests {
         let engine = CadenceEngine()
         feed(engine, constantSeries(160, 20))
         let result = feed(engine, constantSeries(162, 40), startAt: 20 * 0.6)
-        #expect(result.decisions.filter { $0.decision?.kind == .retarget }.isEmpty)
+        let retargets = result.decisions.filter { $0.decision?.kind == .retarget }
+        #expect(retargets.isEmpty)
         #expect(engine.currentTarget == 160)
     }
 

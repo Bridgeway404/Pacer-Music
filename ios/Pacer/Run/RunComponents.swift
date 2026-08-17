@@ -324,7 +324,7 @@ struct DiagnosticsPanel: View {
                 diagRow("smoothed", coordinator.smoothedSpm.map { String(format: "%.1f SPM", $0) } ?? "—")
                 diagRow("engine target", coordinator.engineTargetSpm.map { "\($0) SPM" } ?? "—")
                 diagRow("musical target", coordinator.musicalTargetSpm.map { "\($0) BPM" } ?? "—")
-                diagRow("track BPM", coordinator.currentTrack?.bpm.map { String(format: "%.0f", $0) } ?? "—")
+                diagRow("track BPM", trackBpmLabel)
                 diagRow(
                     "multiplier",
                     coordinator.musicalTargetSpm.flatMap { target in
@@ -361,6 +361,13 @@ struct DiagnosticsPanel: View {
             }
         }
         .pacerCard()
+    }
+
+    private var trackBpmLabel: String {
+        if let bpm = coordinator.currentTrack?.bpm {
+            return String(format: "%.0f", bpm)
+        }
+        return "—"
     }
 
     private func diagRow(_ label: String, _ value: String) -> some View {

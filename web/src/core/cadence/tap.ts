@@ -1,4 +1,3 @@
-import type { CadenceSample } from "../shared/types";
 import { BaseCadenceProvider } from "./provider";
 import { median } from "./filters";
 

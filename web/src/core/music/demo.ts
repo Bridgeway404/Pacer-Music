@@ -117,7 +117,14 @@ export class DemoMusicProvider implements MusicProvider {
   }
 
   async getPlaylists(): Promise<Playlist[]> {
-    const { tracks: _tracks, ...playlist } = DEMO_PLAYLIST;
+    const playlist: Playlist = {
+      id: DEMO_PLAYLIST.id,
+      provider: DEMO_PLAYLIST.provider,
+      providerPlaylistId: DEMO_PLAYLIST.providerPlaylistId,
+      name: DEMO_PLAYLIST.name,
+      artworkUrl: DEMO_PLAYLIST.artworkUrl,
+      trackCount: DEMO_PLAYLIST.trackCount,
+    };
     return [playlist];
   }
 
