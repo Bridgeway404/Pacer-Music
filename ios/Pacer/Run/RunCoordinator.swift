@@ -105,8 +105,8 @@ final class RunCoordinator {
     private var beatTimer: Timer?
 
     let tempoEngine = DemoTempoEngine()
-    private lazy var demoProvider = DemoMusicProvider(tempoEngine: tempoEngine)
-    private lazy var appleProvider = AppleMusicProvider()
+    @ObservationIgnored private lazy var demoProvider = DemoMusicProvider(tempoEngine: tempoEngine)
+    @ObservationIgnored private lazy var appleProvider = AppleMusicProvider()
     let tapProvider = ManualTapCadenceProvider()
     let simulatorProvider = SimulatedCadenceProvider()
 
