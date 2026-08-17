@@ -347,9 +347,7 @@ struct DiagnosticsPanel: View {
             .font(.system(size: 12, weight: .medium, design: .monospaced))
             .foregroundStyle(Theme.textSecondary)
 
-            if let sim = simulatorControls {
-                sim
-            }
+            simulatorControls
 
             Divider().overlay(Theme.surfaceRaised)
 
