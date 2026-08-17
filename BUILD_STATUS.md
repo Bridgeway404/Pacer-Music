@@ -2,6 +2,11 @@
 
 _Last updated: 2026-08-17 (iOS-first pivot session)._
 
+**CI: ✅ fully green** — iOS Simulator build (unsigned, Xcode 16.4/macos-15),
+PacerKit engine tests on Linux (swift:6.1) and macOS, and the TypeScript
+reference suite (57 Vitest tests) all pass:
+https://github.com/Bridgeway404/Pacer-Music/actions
+
 ## Working now
 
 - **PacerKit** (Swift package, framework-free): cadence engine (median+EMA smoothing,
@@ -24,7 +29,7 @@ _Last updated: 2026-08-17 (iOS-first pivot session)._
   migrations in-repo, security advisors clean; Swift SDK wired for auth + run
   persistence; local JSON persistence when signed out.
 - **CI (GitHub Actions)**: PacerKit tests on Linux + macOS, unsigned iOS Simulator
-  build via XcodeGen, web Vitest suite.
+  build via XcodeGen, web Vitest suite — all passing as of the latest commit.
 
 ## GitHub
 
