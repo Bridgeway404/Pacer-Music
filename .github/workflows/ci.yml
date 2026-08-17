@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  # PacerKit is pure Swift (Foundation only) — its full engine test suite
+  # runs fast on Linux, no Xcode required.
+  pacerkit-tests-linux:
+    name: PacerKit tests (Linux)
+    runs-on: ubuntu-latest
+    container: swift:6.1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run PacerKit tests
+        run: swift test --package-path ios/PacerKit
+
+  # Full iOS app build for the Simulator (no code signing).
+  build-ios:
+    name: iOS Simulator build
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate --spec ios/project.yml --project ios
+      - name: Build for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project ios/Pacer.xcodeproj \
+            -scheme Pacer \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            | tail -n 60
+      - name: Run PacerKit tests (macOS)
+        run: swift test --package-path ios/PacerKit
+
+  # The /web reference implementation is the behavioral spec for PacerKit —
+  # keep its Vitest suite green so the two stay aligned.
+  web-reference-tests:
+    name: Web reference tests (Vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx vitest run
